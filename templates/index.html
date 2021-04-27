@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p>Click the button to get your coordinates.</p>
+
+<button onclick="getLocation()">Try It</button>
+
+<p id="demo"></p>
+
+<script>
+    var x = document.getElementById("demo");
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.watchPosition(showPosition);
+        } else {
+            x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+    }
+
+    function showPosition(position) {
+        x.innerHTML="Latitude: " + position.coords.latitude +
+            "<br>Longitude: " + position.coords.longitude;
+        /* const userAction = async () => {
+            const response = await fetch('http://c3684a2557bd.ngrok.io/', {
+                method: 'POST',
+                body: JSON.stringify({"latitude": position.coords.latitude, "longitude": position.coords.longitude}),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const myJson = await response.json(); //extract JSON from the http response
+            // do something with myJson
+        }
+        userAction()*/
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST",'/track' , true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify({
+            "latitude":position.coords.latitude
+        }));
+    }
+</script>
+
+</body>
+</html>
